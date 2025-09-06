@@ -109,7 +109,7 @@ Resources:
     Properties:
       ApiId: !Ref HttpApi
       RouteKey: "POST /synthesize"
-      AuthorizationType: AWS_IAM
+      AuthorizationType: NONE
       Target: !Sub "integrations/${HttpApiIntegration}"
 
   HttpApiStage:
