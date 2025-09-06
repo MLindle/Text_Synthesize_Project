@@ -95,7 +95,7 @@ Resources:
     Type: AWS::ApiGatewayV2::Route
     Properties:
       ApiId: !Ref HttpApi
-      RouteKey: "$default"
+      RouteKey: "$default /synthesize"
       AuthorizationType: AWS_IAM
       Target: !Sub "integrations/${HttpApiIntegration}"
 
