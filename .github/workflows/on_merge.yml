@@ -79,12 +79,17 @@ jobs:
 
         - name: Smoke test Lambda (proxy-style event)
           env:
-            LAMBDA_NAME: ${{ secrets.LAMBDA_NAME_BETA }}
+            LAMBDA_NAME: ${{ secrets.LAMBDA_NAME_PROD }}
           run: |
             set -euo pipefail
-            # Build an HTTP API v2 event with payload from tests/payload.json
+
+            # ensure payload exists (use a default if missing)
+            mkdir -p tests
+            [[ -f tests/payload.json ]] || echo '{"text":"This is from CI"}' > tests/payload.json
+
+            # build HTTP API v2 event; body must be a JSON *string*
             printf '{"version":"2.0","routeKey":"POST /synthesize","rawPath":"/synthesize","headers":{"content-type":"application/json"},"body":%s,"isBase64Encoded":false}\n' \
-              "$(jq -c . tests/payload.json)" > event.json
+              "$(jq -c -Rs . tests/payload.json)" > event.json
 
             aws lambda invoke \
               --function-name "$LAMBDA_NAME" \
