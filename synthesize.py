@@ -20,8 +20,11 @@ def synthesize(bucket:str, prefix:str):
     s3 = boto3.client('s3')
     polly = boto3.client('polly')
 
-    with open('speech.txt', 'r') as f:
-        text_to_synthesize = f.read()
+    key_prefix = prefix.strip("/")                         
+    text_key   = f"{key_prefix}/speech.txt" if key_prefix else "speech.txt"  
+    obj = s3.get_object(Bucket=bucket, Key=text_key)
+    text_to_synthesize = obj["Body"].read().decode("utf-8") 
+
 
     response = polly.synthesize_speech(
         LanguageCode='en-US',
@@ -33,5 +36,6 @@ def synthesize(bucket:str, prefix:str):
     with closing(response["AudioStream"]) as stream:
         audio_bytes = stream.read()
 
-    s3.put_object(Bucket=bucket, Key=prefix, Body=audio_bytes)
-    return {'bucket':bucket, 'key':prefix}
+    output_key = f"{key_prefix}/speech.mp3" if key_prefix else "speech.mp3"
+    s3.put_object(Bucket=bucket, Key=output_key, Body=audio_bytes, ContentType="audio/mpeg")
+    return {'bucket':bucket, 'key':output_key}
