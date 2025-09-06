@@ -65,7 +65,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Ref LambdaFunctionName
-      Handler: function.lambda_handler
+      Handler: synthesize.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Runtime: python3.12
       Timeout: 120
