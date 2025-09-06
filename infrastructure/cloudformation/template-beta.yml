@@ -108,7 +108,7 @@ Resources:
     Type: AWS::ApiGatewayV2::Route
     Properties:
       ApiId: !Ref HttpApi
-      RouteKey: "POST /synthesize"
+      RouteKey: "ANY /synthesize"
       AuthorizationType: NONE
       Target: !Sub "integrations/${HttpApiIntegration}"
 
