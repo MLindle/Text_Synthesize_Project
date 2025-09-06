@@ -19,8 +19,8 @@ jobs:
             - uses: actions/checkout@v5
             - name: Package and upload lambda code to S3
               env:
-                S3_BUCKET: ${{ secrets.S3_BUCKET_PROD }}
-                S3_PATH:   ${{ secrets.S3_PATH_PROD }}
+                S3_BUCKET: ${{ secrets.S3_BUCKET_BETA }}
+                S3_PATH:   ${{ secrets.S3_PATH_BETA }}
               run: |
                 zip function.zip synthesize.py
                 aws s3 cp function.zip s3://$S3_BUCKET/$S3_PATH/function.zip
