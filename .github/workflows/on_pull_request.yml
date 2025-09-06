@@ -25,6 +25,14 @@ jobs:
                 zip function.zip synthesize.py
                 aws s3 cp function.zip s3://$S3_BUCKET/$S3_PATH/function.zip
 
+            - uses: actions/checkout@v5
+            - name: Upload sample text to S3
+              env:
+                S3_BUCKET: ${{ secrets.S3_BUCKET_BETA }}
+                S3_PATH:   ${{ secrets.S3_PATH_BETA }}
+              run: |
+                aws s3 cp speech.txt s3://$S3_BUCKET/$S3_PATH/speech.txt
+
     deploy_to_beta_job:
       name: Deploy lambda to beta environment
       runs-on: ubuntu-latest
