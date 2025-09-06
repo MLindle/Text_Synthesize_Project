@@ -29,6 +29,9 @@ Parameters:
     Default: ""
     Description: Prefix for path in bucket
 
+Conditions:
+  HasPrefix: !Not [ !Equals [ !Ref S3BucketPrefix, "" ] ]
+
 Resources:
 
   LambdaExecutionRole:
