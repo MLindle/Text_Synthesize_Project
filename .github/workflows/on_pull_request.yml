@@ -18,6 +18,7 @@ jobs:
 
             - uses: actions/checkout@v5
             - name: Package and upload lambda code to S3
+              if: github.event_name == 'pull_request'
               env:
                 S3_BUCKET: ${{ secrets.S3_BUCKET_BETA }}
                 S3_PATH:   ${{ secrets.S3_PATH_BETA }}
@@ -27,6 +28,7 @@ jobs:
 
             - uses: actions/checkout@v5
             - name: Upload sample text to S3
+              if: github.event_name == 'pull_request'
               env:
                 S3_BUCKET: ${{ secrets.S3_BUCKET_BETA }}
                 S3_PATH:   ${{ secrets.S3_PATH_BETA }}
