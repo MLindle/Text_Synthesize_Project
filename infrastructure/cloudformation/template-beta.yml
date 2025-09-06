@@ -60,6 +60,19 @@ Resources:
                 Resource:
                   - !Sub arn:${AWS::Partition}:s3:::${S3Bucket}
                   - !Sub arn:${AWS::Partition}:s3:::${S3Bucket}/*
+        - PolicyName: LambdaS3ReadWriteForPolly
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: s3:GetObject
+                Resource:
+                  - !Sub "arn:aws:s3:::${S3Bucket}/speech.txt"
+                  - !Sub "arn:aws:s3:::${S3Bucket}/${S3BucketPrefix}/speech.txt"
+              - Effect: Allow
+                Action: s3:PutObject
+                Resource:
+                  - !Sub "arn:aws:s3:::${S3Bucket}/${S3BucketPrefix}/*"
 
   LambdaFunction:
     Type: AWS::Lambda::Function
