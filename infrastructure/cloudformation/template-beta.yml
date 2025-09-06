@@ -29,6 +29,9 @@ Parameters:
     Default: ""
     Description: Prefix for path in bucket
 
+Conditions:
+  HasPrefix: !Not [ !Equals [ !Ref S3BucketPrefix, "" ] ]
+
 Resources:
 
   LambdaExecutionRole:
@@ -126,3 +129,19 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub "arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/${ApiStageName}/*/*"
+
+Outputs:
+  LambdaArn:
+    Description: Lambda function ARN
+    Value: !GetAtt LambdaFunction.Arn
+
+  ApiGatewayUrl:
+    Description: HTTP API base invoke URL
+    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/${ApiStageName}"
+
+  S3BucketUri:
+    Description: S3 bucket (or bucket/prefix) URI for this env
+    Value: !If
+      - HasPrefix
+      - !Sub "s3://${S3Bucket}/${S3BucketPrefix}"
+      - !Sub "s3://${S3Bucket}"
