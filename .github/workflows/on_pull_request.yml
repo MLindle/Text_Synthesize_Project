@@ -58,6 +58,6 @@ jobs:
                 LambdaFunctionName=${{ secrets.LAMBDA_NAME_BETA }} \
                 LambdaCodeBucket=${{ secrets.S3_BUCKET_BETA }} \
                 LambdaCodeKey=${{ secrets.S3_PATH_BETA }}/function.zip \
-                ApiStageName=beta \
+                ApiStageName=beta/synthesize \
                 S3Bucket=${{ secrets.S3_BUCKET_BETA }} \
                 S3BucketPrefix=${{ secrets.S3_PATH_BETA }}
