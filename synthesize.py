@@ -8,6 +8,7 @@ def lambda_handler(event, context):
 
     bucket = os.environ["S3_Bucket"]
     prefix = os.environ.get("S3_Bucket_Prefix", "")
+    result = synthesize(bucket, prefix)
 
     return {
         "statusCode": 200,
