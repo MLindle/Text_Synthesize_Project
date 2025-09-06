@@ -11,11 +11,11 @@ def lambda_handler(event, context):
 
     return {
         "statusCode": 200,
-        "body": json.dumps({"bucket": bucket, "prefix": prefix, "query": q})
+        "body": json.dumps({"bucket": bucket, "prefix": prefix})
     }
 
 
-def synthesize():
+def synthesize(bucket:str, prefix:str):
     s3 = boto3.client('s3')
     polly = boto3.client('polly')
 
