@@ -69,3 +69,26 @@ jobs:
                 ApiStageName=beta \
                 S3Bucket=${{ secrets.S3_BUCKET_BETA }} \
                 S3BucketPrefix=${{ secrets.S3_PATH_BETA }}
+
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v4
+          with:
+            aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ${{ secrets.AWS_REGION }}
+
+        - name: Smoke test Lambda (proxy-style event)
+          env:
+            LAMBDA_NAME: ${{ secrets.LAMBDA_NAME_BETA }}
+          run: |
+            set -euo pipefail
+            # Build an HTTP API v2 event with payload from tests/payload.json
+            printf '{"version":"2.0","routeKey":"POST /synthesize","rawPath":"/synthesize","headers":{"content-type":"application/json"},"body":%s,"isBase64Encoded":false}\n' \
+              "$(jq -c . tests/payload.json)" > event.json
+
+            aws lambda invoke \
+              --function-name "$LAMBDA_NAME" \
+              --cli-binary-format raw-in-base64-out \
+              --payload fileb://event.json out.json
+
+            cat out.json
