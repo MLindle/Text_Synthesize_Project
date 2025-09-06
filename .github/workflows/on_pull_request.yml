@@ -22,7 +22,7 @@ jobs:
                 S3_BUCKET: ${{ secrets.S3_BUCKET_PROD }}
                 S3_PATH:   ${{ secrets.S3_PATH_PROD }}
               run: |
-                zip function.zip lambda_function.py
+                zip function.zip synthesize.py
                 aws s3 cp function.zip s3://$S3_BUCKET/$S3_PATH/function.zip
 
     deploy_to_beta_job:
