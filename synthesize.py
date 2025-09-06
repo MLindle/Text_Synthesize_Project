@@ -1,14 +1,23 @@
 import boto3
 import os
 from contextlib import closing
+import json
 
-bucket = os.environ["S3_Bucket"]
-prefix = os.environ.get("S3_Bucket_Prefix", "")
 
-s3 = boto3.client('s3')
-polly = boto3.client('polly')
+def lambda_handler(event, context):
+
+    bucket = os.environ["S3_Bucket"]
+    prefix = os.environ.get("S3_Bucket_Prefix", "")
+
+    return {
+        "statusCode": 200,
+        "body": json.dumps({"bucket": bucket, "prefix": prefix, "query": q})
+    }
+
 
 def synthesize():
+    s3 = boto3.client('s3')
+    polly = boto3.client('polly')
 
     with open('speech.txt', 'r') as f:
         text_to_synthesize = f.read()
