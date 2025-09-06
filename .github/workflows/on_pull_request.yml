@@ -1,0 +1,26 @@
+name: Package and deploy Lambda + API-BETA
+
+on:
+    pull_request:
+        branches: ['main']
+
+jobs:
+    package_lambda_to_s3:
+        name: Package and upload script to S3
+        runs-on: ubuntu-latest
+        steps:
+            - name: AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+                aws-region: ${{ secrets.AWS_REGION }}
+
+            - uses: actions/checkout@v5
+            - name: Package and upload lambda code to S3
+              env:
+                S3_BUCKET: ${{ secrets.S3_BUCKET_PROD }}
+                S3_PATH:   ${{ secrets.S3_PATH_PROD }}
+              run: |
+                zip function.zip lambda_function.py
+                aws s3 cp function.zip s3://$S3_BUCKET/$S3_PATH/function.zip

@@ -1,0 +1,2 @@
+Hello, this is a sample test of Amazon Polly. 
+If you can hear this, your text-to-speech integration is working correctly.
