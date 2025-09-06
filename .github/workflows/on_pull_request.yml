@@ -24,3 +24,40 @@ jobs:
               run: |
                 zip function.zip lambda_function.py
                 aws s3 cp function.zip s3://$S3_BUCKET/$S3_PATH/function.zip
+
+    deploy_to_beta_job:
+      name: Deploy lambda to beta environment
+      runs-on: ubuntu-latest
+      needs: package_lambda_to_s3
+      steps:
+
+        # Configure AWS credentials
+
+        - name: AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v4
+          with:
+            aws-access-key-id:      ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key:  ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+            aws-region:             ${{ secrets.AWS_REGION }}
+        
+        # Deploy to beta 
+        - uses: aws-actions/setup-sam@v2
+          with:
+            use-installer: true
+        - uses: actions/checkout@v5
+        - name: Deploy lambda to beta environment
+          env:
+            S3_BUCKET: ${{ secrets.S3_BUCKET_BETA }}
+            S3_PATH:   ${{ secrets.S3_PATH_BETA }}
+          run: |
+            sam deploy \
+              --stack-name ${{ secrets.CF_STACK_NAME_BETA }} \
+              --template-file infrastructure/cloudformation/template-beta.yml \
+              --capabilities CAPABILITY_NAMED_IAM \
+              --parameter-overrides \
+                LambdaFunctionName=${{ secrets.LAMBDA_NAME_BETA }} \
+                LambdaCodeBucket=${{ secrets.S3_BUCKET_BETA }} \
+                LambdaCodeKey=${{ secrets.S3_PATH_BETA }}/function.zip \
+                ApiStageName=beta
+                S3Bucket=${{ secrets.S3_BUCKET_BETA }}
+                S3BucketPrefix=${{ secrets.S3_PATH_BETA }}
