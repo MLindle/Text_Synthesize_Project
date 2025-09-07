@@ -39,3 +39,5 @@ def synthesize(bucket:str, prefix:str):
     output_key = f"{key_prefix}/speech.mp3" if key_prefix else "speech.mp3"
     s3.put_object(Bucket=bucket, Key=output_key, Body=audio_bytes, ContentType="audio/mpeg")
     return {'bucket':bucket, 'key':output_key}
+
+#Comment to push update and run workflow
