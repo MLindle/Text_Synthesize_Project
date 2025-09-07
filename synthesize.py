@@ -40,4 +40,8 @@ def synthesize(bucket:str, prefix:str):
     s3.put_object(Bucket=bucket, Key=output_key, Body=audio_bytes, ContentType="audio/mpeg")
     return {'bucket':bucket, 'key':output_key}
 
+<<<<<<< HEAD
 #New comment for Workflow run
+=======
+#Comment to push update and run workflow
+>>>>>>> 761f8b19033fbef7b1ddfaccaae52b778452eaa4
